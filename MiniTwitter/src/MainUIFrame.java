@@ -11,9 +11,21 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class MainFrame extends JFrame {
-	public MainFrame(String title) {
-		super(title);
+public class MainUIFrame extends JFrame {
+	// Uses Singleton design pattern
+	
+	private static MainUIFrame mainUiInstance = null;
+	
+	public static MainUIFrame getInstance() {
+		synchronized(MainUIFrame.class) {
+			if (mainUiInstance == null) {
+				mainUiInstance = new MainUIFrame();
+			}
+		}
+		return mainUiInstance;
+	}
+	
+	private MainUIFrame() {
 		
 		// Set layout manager
 		setLayout(new GridBagLayout());
