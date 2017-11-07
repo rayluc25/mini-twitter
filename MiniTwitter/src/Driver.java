@@ -7,7 +7,7 @@ public class Driver {
 		
 		UserComponent root = new UserGroup("Root");
 		
-/*		SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame = MainUIFrame.getInstance();
 
@@ -15,7 +15,7 @@ public class Driver {
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				frame.setVisible(true);
 			}
-		});*/
+		});
 		
 		// Test Observer pattern
 		

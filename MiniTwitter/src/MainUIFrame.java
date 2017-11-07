@@ -10,8 +10,15 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTree;
+import javax.swing.event.TreeModelListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeSelectionModel;
 
-public class MainUIFrame extends JFrame {
+public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	// Uses Singleton design pattern
 	
 	private static MainUIFrame mainUiInstance = null;
@@ -30,9 +37,18 @@ public class MainUIFrame extends JFrame {
 		// Set layout manager
 		setLayout(new GridBagLayout());
 		Container pane = getContentPane();
+		
+		//Create tree component to represent users and user groups
+		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+		DefaultTreeModel treeModel = new DefaultTreeModel(root);
+		JTree tree = new JTree(root);
+		
+		// Allow one selection at a time in the tree
+		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.addTreeSelectionListener(this);
 
-		// Create Swing components
-		JScrollPane treeView = new JScrollPane();
+		// Create other Swing components
+		JScrollPane treeView = new JScrollPane(tree);
 		JTextArea userIdArea = new JTextArea();
 		JTextArea groupIdArea = new JTextArea();
 		JButton addUserButton = new JButton("Add User");
@@ -98,7 +114,13 @@ public class MainUIFrame extends JFrame {
 		cons.gridy = 6;
 		pane.add(showPositiveButton, cons);
 		
-		// Add behavior
+		// Add behaviors
+		
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent arg0) {
+		// TODO Auto-generated method stub
 		
 	}
 }
