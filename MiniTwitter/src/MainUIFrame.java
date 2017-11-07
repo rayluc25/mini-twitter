@@ -116,13 +116,21 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		
 		// Add behaviors
 		// addUserButton should add a new user with userIdArea input as id
+		// and set the currently selected node as the parent
 		
 	}
 
 	
 	@Override
-	public void valueChanged(TreeSelectionEvent arg0) {
-		// TODO Auto-generated method stub
+	public void valueChanged(TreeSelectionEvent e) {
+		// When a user selects a new user or group in the tree, hold that node
+		DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		
+		// if nothing is selected
+		if (selected == null) return;
+		
+		// retrieve the component that was selected
+		
 		
 	}
 }
