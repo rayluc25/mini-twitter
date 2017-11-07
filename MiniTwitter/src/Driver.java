@@ -37,6 +37,7 @@ public class Driver {
 		user1.postMessage("F*** u");
 		user1.postMessage("F*** u2");
 		
+		// Each user's feed should contain own posts and posts of followings, it works
 		System.out.println("User 1 news feed\n" + user1.getFeed());
 		System.out.println("User 2 news feed\n" + user2.getFeed());
 		System.out.println("User 3 news feed\n" + user3.getFeed());
