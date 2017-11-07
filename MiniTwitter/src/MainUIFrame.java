@@ -1,17 +1,13 @@
-import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
-import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -23,6 +19,8 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	
 	private static MainUIFrame mainUiInstance = null;
 	
+
+	
 	public static MainUIFrame getInstance() {
 		synchronized(MainUIFrame.class) {
 			if (mainUiInstance == null) {
@@ -32,16 +30,16 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		return mainUiInstance;
 	}
 	
+	// Create tree component to represent users and user groups
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
+	DefaultTreeModel treeModel = new DefaultTreeModel(root);
+	JTree tree = new JTree(root);
+	DefaultMutableTreeNode selected;
+	
 	private MainUIFrame() {
-		
 		// Set layout manager
 		setLayout(new GridBagLayout());
 		Container pane = getContentPane();
-		
-		//Create tree component to represent users and user groups
-		DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
-		DefaultTreeModel treeModel = new DefaultTreeModel(root);
-		JTree tree = new JTree(root);
 		
 		// Allow one selection at a time in the tree
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -124,13 +122,9 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		// When a user selects a new user or group in the tree, hold that node
-		DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		
 		// if nothing is selected
 		if (selected == null) return;
-		
-		// retrieve the component that was selected
-		
-		
 	}
 }
