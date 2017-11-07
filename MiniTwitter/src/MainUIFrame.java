@@ -115,9 +115,11 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		pane.add(showPositiveButton, cons);
 		
 		// Add behaviors
+		// addUserButton should add a new user with userIdArea input as id
 		
 	}
 
+	
 	@Override
 	public void valueChanged(TreeSelectionEvent arg0) {
 		// TODO Auto-generated method stub
