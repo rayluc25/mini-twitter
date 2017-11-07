@@ -1,26 +1,34 @@
-import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 public class UserGroup implements UserComponent {
+	// UserGroup is the composite container in this Composite design pattern
 	
 	private boolean isGroup = true;
 	private boolean isUser = false;
-	private String id = UUID.randomUUID().toString();
-	private List<UserComponent> components;
+	private String id;
+	private Set<UserComponent> children;
 	
-	public List<UserComponent> getComponents(){
-		return components;
+	public UserGroup(String id) {
+		this.id = id;
 	}
 	
-	public void setComponents(List<UserComponent> components) {
-		this.components = components;
+	public Set<UserComponent> getChildren(){
+		return children;
+	}
+	
+	public void addChild(UserComponent child) {
+		children.add(child);
+	}
+	
+	public void setChildren(Set<UserComponent> components) {
+		this.children = components;
 	}
 	
 
 	@Override
 	public void expand() {
 		// TODO Auto-generated method stub
-		for(UserComponent component : components) {
+		for(UserComponent component : children) {
 			component.expand();
 		}
 	}

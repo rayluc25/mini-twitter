@@ -53,6 +53,7 @@ public class User extends Subject implements UserComponent, Observer {
 		
 	}
 
+	// 
 	@Override
 	public void follow(Subject sub) {
 		// TODO Auto-generated method stub

@@ -5,6 +5,8 @@ public class Driver {
 
 	public static void main(String[] args) {
 		
+		UserComponent root = new UserGroup("Root");
+		
 /*		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame = MainUIFrame.getInstance();
@@ -24,6 +26,7 @@ public class Driver {
 		User user4 = new User("ObserverUser2");
 		
 		// Attach user3 and user4 as observer of user1
+		// Attach user3 as observer of user2
 		user1.attach(user3);
 		user1.attach(user4);
 		user2.attach(user3);
@@ -31,10 +34,8 @@ public class Driver {
 		// Have user1 post a tweet
 		user1.postMessage("LEAVE BRITNEY ALONE!!!");
 		user2.postMessage("MAKE ME!!");
-		user1.postMessage("Fuck u");
-		user1.postMessage("Fuck u2");
-
-		System.out.println(user1.observers.toString());
+		user1.postMessage("F*** u");
+		user1.postMessage("F*** u2");
 		
 		System.out.println("User 1 news feed\n" + user1.getFeed());
 		System.out.println("User 2 news feed\n" + user2.getFeed());
