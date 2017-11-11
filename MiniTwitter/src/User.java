@@ -17,6 +17,12 @@ public class User extends Subject implements UserComponent, Observer {
 		this.id = id;
 	}
 	
+	// So JTree displays userId instead of address space
+	@Override
+	public String toString() {
+		return this.id;
+	}
+	
 	// This code makes User a Subject from Observer pattern
 	
 	public String getId() {

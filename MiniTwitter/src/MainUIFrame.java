@@ -2,6 +2,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,14 +14,13 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	// Uses Singleton design pattern
 	
 	private static MainUIFrame mainUiInstance = null;
-	
-
 	
 	public static MainUIFrame getInstance() {
 		synchronized(MainUIFrame.class) {
@@ -63,7 +64,7 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		treeCons.gridx = 0;
 		treeCons.gridy = 0;
 		treeCons.gridheight = 7;
-		treeView.setPreferredSize(new Dimension(100, 100));
+		treeView.setPreferredSize(new Dimension(200, 200));
 		pane.add(treeView, treeCons);
 		
 		GridBagConstraints cons = new GridBagConstraints();
@@ -115,7 +116,22 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		// Add behaviors
 		// addUserButton should add a new user with userIdArea input as id
 		// and set the currently selected node as the parent
-		
+		addUserButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addUserButtonPressed();
+			}
+
+			private void addUserButtonPressed() {
+				// Create the user
+				User newUser = new User(userIdArea.getText());
+				// Create new node with newUser as object
+				DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser);
+				// Add the new user as child of selected node
+				selected.add(newUserNode);
+				treeModel.reload();
+			}
+		});
 	}
 
 	
