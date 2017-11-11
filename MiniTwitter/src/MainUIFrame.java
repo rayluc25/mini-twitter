@@ -134,13 +134,40 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 				}
 				// Create the user
 				User newUser = User.createUser(userIdArea.getText());
-				// Create new node with newUser as object
+				// If null, id in use, do not add user
 				if(newUser == null) {
 					return;
 				}
+				// Create new node with newUser as object
 				DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser);
 				// Add the new user as child of selected node
 				treeModel.insertNodeInto(newUserNode, selected, selected.getChildCount());
+			}
+		});
+		
+		// addGroupButton should add a new UserGroup with groupIdArea input as id
+		// and set currently selected node as the parent
+		addGroupButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				addGroupButtonPressed();
+			}
+			
+			private void addGroupButtonPressed() {
+				// If selected node is User, cannot add children
+				if (selected.getUserObject() instanceof User) {
+					return;
+				}
+				// Create the userGroup
+				UserGroup newUserGroup = UserGroup.createUserGroup(groupIdArea.getText());
+				// If null, id in use, do not add UserGroup
+				if (newUserGroup == null) {
+					return;
+				}
+				// Create new node with newUserGroup as object
+				DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(newUserGroup);
+				// Add the new user as child of selected node
+				treeModel.insertNodeInto(newNode, selected, selected.getChildCount());
 			}
 		});
 	}
