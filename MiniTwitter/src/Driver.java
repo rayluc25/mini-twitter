@@ -5,8 +5,6 @@ public class Driver {
 
 	public static void main(String[] args) {
 		
-		UserComponent root = new UserGroup("Root");
-		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame = MainUIFrame.getInstance();
@@ -20,10 +18,10 @@ public class Driver {
 		// Test Observer pattern
 		
 		// Create the Subject and Observers
-		User user1 = new User("SubjectUser1");
-		User user2 = new User("SubjectUser2");
-		User user3 = new User("ObserverUser1");
-		User user4 = new User("ObserverUser2");
+		User user1 = User.createUser("SubjectUser1");
+		User user2 = User.createUser("SubjectUser2");
+		User user3 = User.createUser("ObserverUser1");
+		User user4 = User.createUser("ObserverUser2");
 		
 		// Attach user3 and user4 as observer of user1
 		// Attach user3 as observer of user2

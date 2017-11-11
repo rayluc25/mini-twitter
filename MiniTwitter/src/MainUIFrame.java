@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 public class MainUIFrame extends JFrame implements TreeSelectionListener{
@@ -34,7 +35,7 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	// Create tree component to represent users and user groups
 	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Root");
 	DefaultTreeModel treeModel = new DefaultTreeModel(root);
-	JTree tree = new JTree(root);
+	JTree tree = new JTree(treeModel);
 	DefaultMutableTreeNode selected;
 	
 	private MainUIFrame() {
@@ -123,13 +124,23 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 			}
 
 			private void addUserButtonPressed() {
+				// If selected node is not a UserGroup or Root, cannot add User
+				UserComponent object = null;
+				if (!selected.isRoot()) {
+					object = (UserComponent) selected.getUserObject();
+				}
+				if (object instanceof User) {
+					return;
+				}
 				// Create the user
-				User newUser = new User(userIdArea.getText());
+				User newUser = User.createUser(userIdArea.getText());
 				// Create new node with newUser as object
+				if(newUser == null) {
+					return;
+				}
 				DefaultMutableTreeNode newUserNode = new DefaultMutableTreeNode(newUser);
 				// Add the new user as child of selected node
-				selected.add(newUserNode);
-				treeModel.reload();
+				treeModel.insertNodeInto(newUserNode, selected, selected.getChildCount());
 			}
 		});
 	}
@@ -138,9 +149,9 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		// When a user selects a new user or group in the tree, hold that node
-		selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		
-		// if nothing is selected
-		if (selected == null) return;
+		TreePath tp = e.getNewLeadSelectionPath();  
+	    if (tp != null) {
+	    		selected = (DefaultMutableTreeNode) tp.getLastPathComponent(); 
+	    }
 	}
 }

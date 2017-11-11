@@ -1,11 +1,14 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.UUID;
+import java.util.Set;
 
 public class User extends Subject implements UserComponent, Observer {
 	
 	private boolean isGroup = false;
 	private boolean isUser = true;
+	// So users cannot share the same id
+	private static Set<String> allUsers = new HashSet<String>();
 	private String id;
 	// A list of the user's own posts
 	private List<Post> newsfeed = new ArrayList<>();
@@ -13,7 +16,18 @@ public class User extends Subject implements UserComponent, Observer {
 	private List<String> followers = new ArrayList<>();
 	private List<String> following = new ArrayList<>();
 	
-	public User(String id) {
+	// Static factory method to ensure unique userIds
+	public static User createUser(String id) {
+		// Check if allUsers already has a User with given id
+		if (allUsers.contains(id)) {
+			return null;
+		}
+		// If userId not used yet, create the User, add id to allUsers
+		allUsers.add(id);
+		return new User(id);
+	}
+	
+	private User(String id) {
 		this.id = id;
 	}
 	
