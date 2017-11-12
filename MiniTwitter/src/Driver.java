@@ -8,10 +8,6 @@ public class Driver {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				JFrame frame = MainUIFrame.getInstance();
-
-				frame.setSize(750, 600);
-				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				frame.setVisible(true);
 			}
 		});
 		
