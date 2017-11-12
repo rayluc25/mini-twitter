@@ -47,8 +47,13 @@ public class UserUIFrame extends JFrame {
 		JButton postButton = new JButton("Post tweet");
 		JLabel newsFeedLabel = new JLabel("Your feed:");
 		
+		DefaultListModel feedModel = new DefaultListModel();
+		
 		Vector<Post> newsFeedVector = currentUser.getFeedVector();
-		JList newsFeedJList = new JList(newsFeedVector);
+		JList newsFeedJList = new JList(feedModel);
+		for (Post post : newsFeedVector) {
+			feedModel.addElement(post);
+		}
 		newsFeedJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		JScrollPane newsFeedPane = new JScrollPane(newsFeedJList);
 		
@@ -121,6 +126,19 @@ public class UserUIFrame extends JFrame {
 					listModel.addElement(userToFollow);
 				}
 			}
+		});
+		
+		// postButton should post a tweet for the current user
+		postButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				postButtonPressed();
+			}
+			
+			private void postButtonPressed() {
+				String msg = tweetArea.getText();
+				currentUser.postMessage(msg);
+				}
 		});
 	}
 
