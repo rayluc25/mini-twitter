@@ -7,13 +7,14 @@ import java.util.Set;
 import java.util.Vector;
 
 public class User extends Subject implements UserComponent, Observer {
+	private IUpdateListener updateListener;
 	
 	private boolean isGroup = false;
 	private boolean isUser = true;
 	// So users cannot share the same id
 	private static Map<String, User> allUsers = new HashMap<String, User>();
 	private String id;
-	// A list of the user's own posts and posts of those in following
+	// A list of both the user's own posts and posts of those user is following
 	private Vector<Post> newsFeed = new Vector<>();
 	// A list of people who are following this User
 	private List<String> followers = new ArrayList<>();
@@ -50,7 +51,6 @@ public class User extends Subject implements UserComponent, Observer {
 	
 	public void postMessage(String msg) {
 		Post post = new Post(msg, this);
-		System.out.println(id + " posted: " + msg);
 		newsFeed.add(post);
 		notifyObservers(post);
 	}
@@ -58,6 +58,10 @@ public class User extends Subject implements UserComponent, Observer {
 	// This code makes User an Observer from the Observer pattern
 	public void update(Post post) {
 		newsFeed.add(post);
+		// add to list model
+		if (updateListener != null) {
+			updateListener.feedUpdated(post);
+		}
 	}
 	
 	public String getFeed() {
@@ -75,7 +79,7 @@ public class User extends Subject implements UserComponent, Observer {
 	@Override
 	public void expand() {
 		// Generate the User View UI
-		
+		UserUIFrame userView = new UserUIFrame(this);
 	}
 
 	@Override
@@ -93,5 +97,13 @@ public class User extends Subject implements UserComponent, Observer {
 	
 	public static HashMap<String, User> getAllUsers() {
 		return (HashMap<String, User>) allUsers;
+	}
+	
+	public void addUpdateListener(IUpdateListener listener) {
+		updateListener = listener;
+	}
+	
+	public void accept(Visitor vis) {
+		vis.atUser(this);
 	}
 }

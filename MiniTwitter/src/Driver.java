@@ -11,7 +11,7 @@ public class Driver {
 			}
 		});
 		
-		// Test Observer pattern
+/*		// Test Observer pattern
 		
 		// Create the Subject and Observers
 		User user1 = User.createUser("SubjectUser1");
@@ -36,7 +36,7 @@ public class Driver {
 		System.out.println("User 2 news feed\n" + user2.getFeed());
 		System.out.println("User 3 news feed\n" + user3.getFeed());
 		System.out.println("User 4 news feed\n" + user4.getFeed());	
-
+*/
 	}
 
 }

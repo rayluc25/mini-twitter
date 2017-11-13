@@ -5,10 +5,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Map.Entry;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTree;
@@ -35,7 +37,7 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 			if (mainUiInstance == null) {
 				mainUiInstance = new MainUIFrame();
 				// Set frame attributes
-				mainUiInstance.setSize(750, 600);
+				mainUiInstance.setSize(650, 500);
 				mainUiInstance.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				mainUiInstance.setVisible(true);
 			}
@@ -153,6 +155,9 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 			}
 
 			private void addUserButtonPressed() {
+				if (selected == null) {
+					return;
+				}
 				// If selected node is not a UserGroup or Root, cannot add User
 				UserComponent object = null;
 				if (!selected.isRoot()) {
@@ -183,6 +188,9 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 			}
 			
 			private void addGroupButtonPressed() {
+				if (selected == null) {
+					return;
+				}
 				// If selected node is User, cannot add children
 				if (selected.getUserObject() instanceof User) {
 					return;
@@ -208,12 +216,86 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 			}
 			
 			private void userViewButtonPressed() {
+				if (selected == null) {
+					return;
+				}
 				// Open the UserUI only if selected is User
 				if (selected.getUserObject() instanceof User) {
-					UserUIFrame userView = new UserUIFrame((User) selected.getUserObject());
+					User u = (User) selected.getUserObject();
+					u.expand();
 				}
 			}
 		});
+		
+		// userTotalButton should accept the AnalysisVisitor on all User objects
+		userTotalButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				userTotalButtonPressed();
+			}
+			
+			private void userTotalButtonPressed() {
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (Entry<String, User> e : User.getAllUsers().entrySet()) {
+					e.getValue().accept(vis);
+				}
+				// create a new dialog with the user total
+				JOptionPane.showMessageDialog(pane, "There are " + vis.getUserTotal() + " users in total.");
+			}
+		});
+		
+		// groupTotalButton should accept the AnalysisVisitor on all UserGroup objects
+		groupTotalButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				groupTotalButtonPressed();
+			}
+			
+			private void groupTotalButtonPressed() {
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (UserGroup e : UserGroup.getAllGroups()) {
+					e.accept(vis);
+				}
+				// create a new dialog with the group total
+				JOptionPane.showMessageDialog(pane, "There are " + vis.getGroupTotal() + " groups in total.");
+			}
+		});
+		
+		// messagesTotalButton should accept the AnalysisVisitor on all Post objects
+		messagesTotalButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				messagesTotalButtonPressed();
+			}
+			
+			private void messagesTotalButtonPressed() {
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (Post e : Post.getAllPosts()) {
+					e.accept(vis);
+				}
+				// create a new dialog with the messages total
+				JOptionPane.showMessageDialog(pane, "There are " + vis.getMessagesTotal() + " total tweet messages.");
+				System.out.println(Post.getAllPosts().toString());
+			}
+		});
+		
+		// showPositiveButton should accept the AnalysisVisitor on all Post objects
+		showPositiveButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				showPositiveButtonPressed();
+			}
+			
+			private void showPositiveButtonPressed() {
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (Post e : Post.getAllPosts()) {
+					e.accept(vis);
+				}
+				// create a new dialog with the positive percentage
+				JOptionPane.showMessageDialog(pane, "There are " + vis.getPositivePercentage() + "% positive messages");
+			}
+		});
+		
 	}
 
 	

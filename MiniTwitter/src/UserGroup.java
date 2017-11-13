@@ -4,7 +4,7 @@ import java.util.Set;
 public class UserGroup implements UserComponent {
 	// UserGroup is the composite container in this Composite design pattern
 	
-	private static Set<String> allGroups = new HashSet<String>();
+	private static Set<UserGroup> allGroups = new HashSet<UserGroup>();
 	private boolean isGroup = true;
 	private boolean isUser = false;
 	private String id;
@@ -15,9 +15,10 @@ public class UserGroup implements UserComponent {
 		if (allGroups.contains(id)) {
 			return null;
 		}
-		// If id not used yet, create the User, add id to allGroups
-		allGroups.add(id);
-		return new UserGroup(id);
+		// If id not used yet, create the UserGroup, add to allGroups
+		UserGroup newGroup = new UserGroup(id);
+		allGroups.add(newGroup);
+		return newGroup;
 	}
 		
 	private UserGroup(String id) {
@@ -45,12 +46,18 @@ public class UserGroup implements UserComponent {
 
 	@Override
 	public void expand() {
-		// TODO Auto-generated method stub
 		for(UserComponent component : children) {
 			component.expand();
 		}
 	}
 
-
+	@Override
+	public void accept(Visitor vis) {
+		vis.atUserGroup(this);
+	}
+	
+	public static Set<UserGroup> getAllGroups() {
+		return allGroups;
+	}
 
 }

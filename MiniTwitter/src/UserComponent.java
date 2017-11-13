@@ -5,4 +5,6 @@ public interface UserComponent {
 	
 	public void expand();
 	
+	public void accept(Visitor vis);
+	
 }

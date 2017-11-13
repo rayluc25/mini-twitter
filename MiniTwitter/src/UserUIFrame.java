@@ -16,11 +16,16 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-public class UserUIFrame extends JFrame {
+public class UserUIFrame extends JFrame implements IUpdateListener {
+	
+	private DefaultListModel feedModel = new DefaultListModel();
 
 	public UserUIFrame(User currentUser) {
+		// Add UpdateListener to perform action
+		currentUser.addUpdateListener(this);
+		
 		// Set UserUI attributes
-		this.setSize(750, 600);
+		this.setSize(400, 600);
 		this.setVisible(true);
 
 		// Set layout manager
@@ -28,6 +33,7 @@ public class UserUIFrame extends JFrame {
 		Container pane = getContentPane();
 		
 		// Create the swing components
+		this.setTitle(currentUser.getId() + "'s User View");
 		JTextArea userIdArea = new JTextArea("User ID", 1, 15);
 		JButton followButton = new JButton("Follow User");
 		JLabel currentlyFollowingLabel = new JLabel("Currently following:");
@@ -39,16 +45,13 @@ public class UserUIFrame extends JFrame {
 		for (String id : followingArray) {
 			listModel.addElement(id);
 		}
-		//JList followingJList = new JList<String>(followingArray);
 		followingJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		JScrollPane followingPane = new JScrollPane(followingJList);
 		
 		JTextArea tweetArea = new JTextArea("Tweet a message!", 1, 15);
 		JButton postButton = new JButton("Post tweet");
+		
 		JLabel newsFeedLabel = new JLabel("Your feed:");
-		
-		DefaultListModel feedModel = new DefaultListModel();
-		
 		Vector<Post> newsFeedVector = currentUser.getFeedVector();
 		JList newsFeedJList = new JList(feedModel);
 		for (Post post : newsFeedVector) {
@@ -60,6 +63,7 @@ public class UserUIFrame extends JFrame {
 		
 		// Set constraints and add components to content pane
 		GridBagConstraints cons = new GridBagConstraints();
+		
 		cons.fill = GridBagConstraints.HORIZONTAL;
 		cons.gridx = 0;
 		cons.gridy = 0;
@@ -99,7 +103,7 @@ public class UserUIFrame extends JFrame {
 		pane.add(newsFeedLabel, cons);
 		
 		GridBagConstraints feedCons = new GridBagConstraints();
-		feedCons.fill = GridBagConstraints.HORIZONTAL;
+		feedCons.fill = GridBagConstraints.VERTICAL;
 		feedCons.gridx = 0;
 		feedCons.gridy = 5;
 		feedCons.gridwidth = 2;
@@ -138,8 +142,17 @@ public class UserUIFrame extends JFrame {
 			private void postButtonPressed() {
 				String msg = tweetArea.getText();
 				currentUser.postMessage(msg);
+				// mimic the behavior of posting to others UI
+				Post p = new Post(msg, currentUser);
+				Post.addToAllPosts(p);
+				feedModel.addElement(p);
 				}
 		});
+	}
+
+	@Override
+	public void feedUpdated(Post p) {
+		feedModel.addElement(p);
 	}
 
 }
