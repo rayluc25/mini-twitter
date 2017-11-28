@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class AnalysisVisitor implements Visitor{
@@ -7,15 +9,23 @@ public class AnalysisVisitor implements Visitor{
 	private int messagesTotal = 0;
 	private int positiveTotal = 0;
 	private float positivePercentage = 0;
+	private List<String> allIds = new ArrayList<String>();
+	private long lastUpdateTime;
+	private User lastUpdatedUser;
 
 	@Override
 	public void atUser(User u) {
 		userTotal++;
+		allIds.add(u.getId());
+		if (u.getUpdateTime() > lastUpdateTime) {
+			lastUpdatedUser = u;
+		}
 	}
 
 	@Override
 	public void atUserGroup(UserGroup u) {
 		groupTotal++;
+		allIds.add(u.getId());
 	}
 
 	@Override
@@ -56,6 +66,14 @@ public class AnalysisVisitor implements Visitor{
 		}
 		positivePercentage = (float) positiveTotal/ (float) messagesTotal * 100;
 		return positivePercentage;
+	}
+	
+	public List<String> getAllIds() {
+		return allIds;
+	}
+	
+	public User getLastUpdatedUser() {
+		return lastUpdatedUser;
 	}
 
 }

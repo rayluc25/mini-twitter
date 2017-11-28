@@ -5,7 +5,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -89,6 +92,8 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		JButton groupTotalButton = new JButton("Show Group Total");
 		JButton messagesTotalButton = new JButton("Show Messages Total");
 		JButton showPositiveButton = new JButton("Show Positive Percentage");
+		JButton idVerificationButton = new JButton("Validate IDs");
+		JButton lastUpdatedUserButton = new JButton("Last Updated User?");
 		
 		// Set constraints and add components to content pane
 		GridBagConstraints treeCons = new GridBagConstraints();
@@ -144,6 +149,16 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 		cons.gridx = 2;
 		cons.gridy = 6;
 		pane.add(showPositiveButton, cons);
+		
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.gridx = 1;
+		cons.gridy = 7;
+		pane.add(idVerificationButton, cons);
+		
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.gridx = 2;
+		cons.gridy = 7;
+		pane.add(lastUpdatedUserButton, cons);
 		
 		// Add behaviors
 		// addUserButton should add a new user with userIdArea input as id
@@ -293,6 +308,62 @@ public class MainUIFrame extends JFrame implements TreeSelectionListener{
 				}
 				// create a new dialog with the positive percentage
 				JOptionPane.showMessageDialog(pane, "There are " + vis.getPositivePercentage() + "% positive messages");
+			}
+		});
+		
+		// idVerificationButton should accept the AnalysisVisitor on all User and UserGroup objects
+		idVerificationButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				idVerificationButtonPressed();
+			}
+			
+			private void idVerificationButtonPressed() {
+				boolean valid = true;
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (User u : User.getAllUsers().values()) {
+					u.accept(vis);
+				}
+				for (UserGroup u : UserGroup.getAllGroups()) {
+					u.accept(vis);
+				}
+				// The set will not contain duplicates even if the list does
+				Set<String> idSet = new HashSet<String>(vis.getAllIds());
+				for (String id : vis.getAllIds()) {
+					// Not valid if any ids contain a space
+					if (id.contains(" ")) {
+						valid = false;
+					}
+					// Not valid if there are duplicates
+					if (idSet.size() < vis.getAllIds().size()) {
+						valid = false;
+					}
+				}
+				// create a new dialog with the result
+				if (valid) {
+					JOptionPane.showMessageDialog(pane, "The User and UserGroup ids are all valid.");
+				}
+				else {
+					JOptionPane.showMessageDialog(pane,  "There are invalid User or UserGroup ids.");
+				}
+				
+			}
+		});
+		
+		// lastUpdatedUserButton should accept the AnalysisVisitor on all User objects
+		lastUpdatedUserButton.addActionListener((ActionListener) new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				lastUpdatedUserButtonPressed();
+			}
+			
+			private void lastUpdatedUserButtonPressed() {
+				AnalysisVisitor vis = new AnalysisVisitor();
+				for (Entry<String, User> e : User.getAllUsers().entrySet()) {
+					e.getValue().accept(vis);
+				}
+				// create a new dialog with the last updated user
+				JOptionPane.showMessageDialog(pane, "The last updated user was " + vis.getLastUpdatedUser());
 			}
 		});
 		

@@ -9,6 +9,8 @@ import java.util.Vector;
 public class User extends Subject implements UserComponent, Observer {
 	private IUpdateListener updateListener;
 	
+	private long creationTime;
+	private long lastUpdateTime;
 	private boolean isGroup = false;
 	private boolean isUser = true;
 	// So users cannot share the same id
@@ -29,6 +31,8 @@ public class User extends Subject implements UserComponent, Observer {
 		}
 		// If userId not used yet, create the User, add user to allUsers
 		User newUser = new User(id);
+		newUser.creationTime = System.currentTimeMillis();
+		newUser.lastUpdateTime = newUser.creationTime;
 		allUsers.put(id,  newUser);
 		return newUser;
 	}
@@ -49,6 +53,18 @@ public class User extends Subject implements UserComponent, Observer {
 		return id;
 	}
 	
+	public long getCreationTime() {
+		return creationTime;
+	}
+	
+	public long getUpdateTime() {
+		return lastUpdateTime;
+	}
+	
+	public void setUpdateTime(long t) {
+		this.lastUpdateTime = t;
+	}
+	
 	public void postMessage(String msg) {
 		Post post = new Post(msg, this);
 		newsFeed.add(post);
@@ -57,6 +73,7 @@ public class User extends Subject implements UserComponent, Observer {
 	
 	// This code makes User an Observer from the Observer pattern
 	public void update(Post post) {
+		lastUpdateTime = System.currentTimeMillis();
 		newsFeed.add(post);
 		// add to list model
 		if (updateListener != null) {

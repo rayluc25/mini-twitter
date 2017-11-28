@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -25,7 +26,7 @@ public class UserUIFrame extends JFrame implements IUpdateListener {
 		currentUser.addUpdateListener(this);
 		
 		// Set UserUI attributes
-		this.setSize(400, 600);
+		this.setSize(500, 600);
 		this.setVisible(true);
 
 		// Set layout manager
@@ -59,6 +60,13 @@ public class UserUIFrame extends JFrame implements IUpdateListener {
 		}
 		newsFeedJList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		JScrollPane newsFeedPane = new JScrollPane(newsFeedJList);
+		
+		// Format the creation time to something readable
+		Date readableDate = new Date(currentUser.getCreationTime());
+		JLabel creationLabel = new JLabel("User created on: " + readableDate);
+		
+		Date readableUpdateTime = new Date(currentUser.getUpdateTime());
+		JLabel updateTimeLabel = new JLabel("User last updated on: " + readableUpdateTime);
 		
 		
 		// Set constraints and add components to content pane
@@ -110,6 +118,16 @@ public class UserUIFrame extends JFrame implements IUpdateListener {
 		newsFeedPane.setPreferredSize(new Dimension(300, 200));
 		pane.add(newsFeedPane, feedCons);
 		
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.gridx = 0;
+		cons.gridy = 6;
+		pane.add(creationLabel, cons);
+		
+		cons.fill = GridBagConstraints.HORIZONTAL;
+		cons.gridx = 0;
+		cons.gridy = 7;
+		pane.add(updateTimeLabel, cons);
+		
 		// Add behaviors
 		// followButton should have the current user follow the user given in userIdArea
 		followButton.addActionListener((ActionListener) new ActionListener() {
@@ -146,6 +164,12 @@ public class UserUIFrame extends JFrame implements IUpdateListener {
 				Post p = new Post(msg, currentUser);
 				Post.addToAllPosts(p);
 				feedModel.addElement(p);
+				// update the last update time
+				currentUser.setUpdateTime(System.currentTimeMillis());
+				Date readableUpdatedTime = new Date(currentUser.getUpdateTime());
+				// update the JLabel with the new last update time whenever tweet posted
+				updateTimeLabel.setText("User last updated on: " + readableUpdatedTime);
+				System.out.println("User last updated on: " + readableUpdatedTime);
 				}
 		});
 	}

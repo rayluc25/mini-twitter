@@ -4,7 +4,9 @@ import java.util.Set;
 public class UserGroup implements UserComponent {
 	// UserGroup is the composite container in this Composite design pattern
 	
+	// So UserGroups cannot share the same id
 	private static Set<UserGroup> allGroups = new HashSet<UserGroup>();
+	private long creationTime;
 	private boolean isGroup = true;
 	private boolean isUser = false;
 	private String id;
@@ -17,6 +19,7 @@ public class UserGroup implements UserComponent {
 		}
 		// If id not used yet, create the UserGroup, add to allGroups
 		UserGroup newGroup = new UserGroup(id);
+		newGroup.creationTime = System.currentTimeMillis();
 		allGroups.add(newGroup);
 		return newGroup;
 	}
@@ -41,6 +44,10 @@ public class UserGroup implements UserComponent {
 	
 	public void setChildren(Set<UserComponent> components) {
 		this.children = components;
+	}
+	
+	public String getId() {
+		return this.id;
 	}
 	
 
